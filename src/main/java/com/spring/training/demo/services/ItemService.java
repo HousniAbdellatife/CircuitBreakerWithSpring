@@ -4,4 +4,5 @@ import com.spring.training.demo.models.Item;
 
 public interface ItemService {
     Item getItem();
+    Item getItemWithAnnotatedCircuitBreakerMethod();
 }

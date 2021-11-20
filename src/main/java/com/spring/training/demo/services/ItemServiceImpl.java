@@ -2,6 +2,7 @@ package com.spring.training.demo.services;
 
 import com.spring.training.demo.apiClient.ItemApiClient;
 import com.spring.training.demo.models.Item;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -53,6 +54,13 @@ public class ItemServiceImpl implements ItemService{
         Supplier<Item> itemSupplier = () -> itemApiClient.getItem();
         Supplier<Item> decoratedItemSupplier = orderServiceCircuitBreaker.decorateSupplier(itemSupplier);
         return decoratedItemSupplier.get();
+    }
+
+    @Override
+    @Bulkhead(name = "")
+    @io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker(name = "orderService", fallbackMethod = "orderFallbackMethod")
+    public Item getItemWithAnnotatedCircuitBreakerMethod() {
+       return itemApiClient.getItem();
     }
 
     public Item orderFallbackMethod(Exception exception) {

@@ -25,11 +25,17 @@ public class OrderController {
     @Autowired
     private ItemService itemService;
 
-    @GetMapping("/order")
+    @GetMapping("/order/breaker/programmatically")
     public ResponseEntity<String> createOrder() {
         Item response = itemService.getItem();
         return ResponseEntity.ok(response.toString());
 
+    }
+
+    @GetMapping("/order/breaker/annotation")
+    public ResponseEntity<String> createOrderWithAnnotatedCircuitBreakerMethod() {
+        Item response = itemService.getItemWithAnnotatedCircuitBreakerMethod();
+        return ResponseEntity.ok(response.toString());
     }
 
     @ExceptionHandler
